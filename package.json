@@ -7,7 +7,7 @@
     "typecheck": "tsc --build packages/core packages/adapters packages/test-kit packages/cli packages/web",
     "lint": "eslint 'packages/*/src/**/*.ts' 'packages/*/test/**/*.ts'",
     "clean": "rm -rf packages/*/dist packages/*/*.tsbuildinfo",
-    "deploy": "pnpm --filter @wash-sale/web build && mkdir -p docs && cp packages/web/dist/index.html packages/web/dist/bundle.js docs/"
+    "deploy-web": "pnpm --filter @wash-sale/web build && mkdir -p docs && cp packages/web/dist/index.html packages/web/dist/bundle.js docs/"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",

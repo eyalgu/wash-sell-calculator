@@ -13,6 +13,7 @@ Built for employees filing 2025 U.S. taxes with RSU, sell-to-cover, and IPO tran
 | `@wash-sale/core` | Pure calculation engine — no I/O dependencies |
 | `@wash-sale/adapters` | CSV parser/serializer and Node.js filesystem adapter |
 | `@wash-sale/cli` | Command-line interface |
+| `@wash-sale/web` | Browser-based calculator UI ([live](https://eyalgu.github.io/wash-sell-calculator/)) |
 | `@wash-sale/test-kit` | Reusable test fixtures and data builders |
 
 ## CLI Usage
@@ -238,6 +239,14 @@ The calculator processes transactions in seven phases:
 7. **Phase G** — Build Form 8949 rows, summary totals, remaining positions, and warnings
 
 Sells are processed date-by-date. For each sell date, phases C-D-E run before moving to the next date, so cascading wash sales resolve correctly.
+
+## Deploying the Web Calculator
+
+```bash
+pnpm deploy-web
+```
+
+This builds `@wash-sale/web` and copies the output to `docs/`, which is served by GitHub Pages.
 
 ## Running Tests
 
