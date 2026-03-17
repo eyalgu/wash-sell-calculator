@@ -2,7 +2,7 @@
 
 ## BUG-001: Same-lot replacement matching (partial lot sales)
 
-**Status:** Open
+**Status:** Resolved
 **Severity:** High — affects loss/gain calculations
 **Found:** 2026-03-16
 
