@@ -2745,7 +2745,66 @@
         const days = daysBetween(acquiredDate, soldDate);
         return days > 365 ? "LONG" : "SHORT";
       }
-      function buildForm8949(ticker, salePortions, matches, fragments) {
+      function consolidateRows(rows, ticker, audit) {
+        const keyOf = (r) => `${r.dateAcquired}|${r.dateSold}|${r.adjustmentCode ?? ""}`;
+        const grouped = /* @__PURE__ */ new Map();
+        for (const row of rows) {
+          const key = keyOf(row);
+          const bucket = grouped.get(key);
+          if (bucket) {
+            bucket.push(row);
+          } else {
+            grouped.set(key, [row]);
+          }
+        }
+        const result = [];
+        for (const bucket of grouped.values()) {
+          if (bucket.length === 1) {
+            result.push(bucket[0]);
+            continue;
+          }
+          let totalShares = decimal_1.ZERO;
+          let totalProceeds = decimal_1.ZERO;
+          let totalCostBasis = decimal_1.ZERO;
+          let totalAdjustment = decimal_1.ZERO;
+          let totalGainOrLoss = decimal_1.ZERO;
+          const { dateAcquired, dateSold, adjustmentCode, term } = bucket[0];
+          const sourceDescriptions = [];
+          for (const row of bucket) {
+            const shares = (0, decimal_1.d)(row.description.split(" ")[0]);
+            totalShares = totalShares.plus(shares);
+            totalProceeds = totalProceeds.plus(row.proceeds);
+            totalCostBasis = totalCostBasis.plus(row.costBasis);
+            totalAdjustment = totalAdjustment.plus(row.adjustmentAmount ?? decimal_1.ZERO);
+            totalGainOrLoss = totalGainOrLoss.plus(row.gainOrLoss);
+            sourceDescriptions.push(row.description);
+          }
+          const hasWashSale = adjustmentCode === "W";
+          const merged = {
+            description: `${totalShares.toString()} sh ${ticker}`,
+            dateAcquired,
+            dateSold,
+            proceeds: (0, decimal_1.roundCents)(totalProceeds),
+            costBasis: (0, decimal_1.roundCents)(totalCostBasis),
+            adjustmentCode: hasWashSale ? "W" : void 0,
+            adjustmentAmount: hasWashSale ? (0, decimal_1.roundCents)(totalAdjustment) : void 0,
+            gainOrLoss: (0, decimal_1.roundCents)(totalGainOrLoss),
+            term
+          };
+          audit?.emit("ROWS_CONSOLIDATED", dateSold, `Consolidated ${bucket.length} rows into ${merged.description} (sold ${dateSold}): ${sourceDescriptions.join(" + ")}`, {
+            payload: {
+              mergedCount: bucket.length,
+              sourceDescriptions,
+              resultDescription: merged.description,
+              dateAcquired,
+              dateSold
+            }
+          });
+          result.push(merged);
+        }
+        return result;
+      }
+      function buildForm8949(ticker, salePortions, matches, fragments, audit) {
         const disallowedBySale = /* @__PURE__ */ new Map();
         for (const match of matches) {
           const current = disallowedBySale.get(match.salePortionId) ?? decimal_1.ZERO;
@@ -2790,7 +2849,11 @@
             longTermRows.push(row);
           }
         }
-        return { shortTermRows, longTermRows, exportNotes };
+        return {
+          shortTermRows: consolidateRows(shortTermRows, ticker, audit),
+          longTermRows: consolidateRows(longTermRows, ticker, audit),
+          exportNotes
+        };
       }
       function buildRemainingPositions(fragments) {
         return fragments.filter((f) => f.sharesOpen.gt(0)).map((f) => ({
@@ -3036,7 +3099,7 @@
             }
           }
         }
-        const form8949Data = (0, g_output_1.buildForm8949)(ticker, allSalePortions, allMatches, fragments);
+        const form8949Data = (0, g_output_1.buildForm8949)(ticker, allSalePortions, allMatches, fragments, audit);
         const remainingPositions = (0, g_output_1.buildRemainingPositions)(fragments);
         const summary = (0, g_output_1.buildSummary)(allSalePortions, allMatches, remainingPositions);
         const warnings = (0, g_output_1.collectWarnings)(allSalePortions, allMatches, fragments, normalizedRows);
