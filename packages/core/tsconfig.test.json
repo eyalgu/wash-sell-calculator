@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "types": ["jest", "node"],
+    "paths": {
+      "@wash-sale/core": ["./src"],
+      "@wash-sale/core/*": ["./src/*"],
+      "@wash-sale/test-kit": ["../test-kit/src"],
+      "@wash-sale/test-kit/*": ["../test-kit/src/*"]
+    },
+    "baseUrl": "."
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

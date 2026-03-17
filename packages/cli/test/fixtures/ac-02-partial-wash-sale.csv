@@ -1,0 +1,4 @@
+date,action,source,shares,pricePerShare,transactionType,acquiredDate
+2025-01-15,BUY,Shareworks,100,10,RSU_VEST,2025-01-15
+2025-02-10,SELL,Shareworks,100,8,OPEN_MARKET_SALE,2025-01-15
+2025-02-25,BUY,Shareworks,60,9,RSU_VEST,2025-02-25

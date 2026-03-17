@@ -1,0 +1,4 @@
+date,action,source,shares,pricePerShare,transactionType,acquiredDate
+2025-07-31,BUY,Computershare,500,33,RSU_VEST,2025-07-31
+2025-07-31,SELL,Computershare,500,30,IPO_SALE,2025-07-31
+2025-08-01,BUY,Shareworks,200,115,RSU_VEST,2025-08-01

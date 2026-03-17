@@ -1,0 +1,57 @@
+=================================================================================================================
+= DISCLAIMER: This tool is for educational and computational purposes only. It does not constitute tax, legal,  =
+= or financial advice. Wash sale rules (IRC §1091) have nuances including but not limited to: IRA acquisitions, =
+= options/contracts on substantially identical securities, spousal transactions, and state-specific rules.      =
+= Always consult a qualified tax professional for your specific situation.                                      =
+=================================================================================================================
+
+=== Input Transactions ===
+Date        Action  Source      Shares  Price/Share  Type              Acquired Date
+------------------------------------------------------------------------------------
+2024-12-15  BUY     Shareworks  60      50.00        RSU_VEST          2024-12-15   
+2025-01-05  BUY     Shareworks  60      50.00        RSU_VEST          2025-01-05   
+2025-01-10  BUY     Shareworks  100     50.00        RSU_VEST          2025-01-10   
+2025-01-20  SELL    Shareworks  60      40.00        OPEN_MARKET_SALE  2025-01-05   
+2025-01-25  SELL    Shareworks  60      35.00        OPEN_MARKET_SALE  2024-12-15   
+
+=== Summary ===
+Realized Gain/Loss (Short-term):  -300.00
+Realized Gain/Loss (Long-term):   0.00
+Total Disallowed Losses:          1200.00
+Deferred (in remaining):           1200.00
+Total Allowed Losses:             300.00
+
+=== Form 8949 (Short-term) ===
+Description  Acquired    Sold        Proceeds  Basis    Adj Code  Adj Amount  Gain/Loss  Term 
+----------------------------------------------------------------------------------------------
+60 sh FIG    2025-01-05  2025-01-20  2400.00   3000.00  W         600.00      0.00       SHORT
+60 sh FIG    2024-12-15  2025-01-25  2100.00   3000.00  W         600.00      -300.00    SHORT
+
+=== Remaining Positions ===
+Fragment ID  Ticker  Source      Shares  Purchase Date  Adjusted Acq Date  Original Basis/Share  Adjusted Basis/Share
+---------------------------------------------------------------------------------------------------------------------
+frag_003     FIG     Shareworks  60      2025-01-10     2024-12-26         50.00                 60.00               
+frag_004     FIG     Shareworks  40      2025-01-10     2024-11-30         50.00                 65.00               
+
+=== Audit Log ===
+#   Type                 Date        Message                                                                  
+--------------------------------------------------------------------------------------------------------------
+1   ROW_NORMALIZED       2024-12-15  Normalized row 2024-12-15_buy_0                                          
+2   ROW_NORMALIZED       2025-01-05  Normalized row 2025-01-05_buy_0                                          
+3   ROW_NORMALIZED       2025-01-10  Normalized row 2025-01-10_buy_0                                          
+4   ROW_NORMALIZED       2025-01-20  Normalized row 2025-01-20_sell_0                                         
+5   ROW_NORMALIZED       2025-01-25  Normalized row 2025-01-25_sell_0                                         
+6   LOT_CREATED          2024-12-15  Created lot frag_001 from 2024-12-15_buy_0                               
+7   LOT_CREATED          2025-01-05  Created lot frag_002 from 2025-01-05_buy_0                               
+8   LOT_CREATED          2025-01-10  Created lot frag_003 from 2025-01-10_buy_0                               
+9   SALE_PROCESSED       2025-01-20  Processed sale of 60 shares from frag_002                                
+10  LOSS_DETECTED        2025-01-20  Loss of -600 detected on sale 2025-01-20_sell_0 (60 shares from frag_002)
+11  REPLACEMENT_MATCHED  2025-01-20  Matched 60 replacement shares from frag_003 for loss on 2025-01-20_sell_0
+12  LOT_SPLIT            2025-01-10  Split frag_003: 60 shares adjusted, 40 shares unadjusted → frag_004      
+13  BASIS_ADJUSTED       2025-01-10  Adjusted basis of frag_003 by +10/share → 60/share                       
+14  ACQ_DATE_ADJUSTED    2025-01-10  Adjusted acquisition date of frag_003 to 2024-12-26 (carried 15 days)    
+15  SALE_PROCESSED       2025-01-25  Processed sale of 60 shares from frag_001                                
+16  LOSS_DETECTED        2025-01-25  Loss of -900 detected on sale 2025-01-25_sell_0 (60 shares from frag_001)
+17  REPLACEMENT_MATCHED  2025-01-25  Matched 40 replacement shares from frag_004 for loss on 2025-01-25_sell_0
+18  BASIS_ADJUSTED       2025-01-10  Adjusted basis of frag_004 by +15/share → 65/share                       
+19  ACQ_DATE_ADJUSTED    2025-01-10  Adjusted acquisition date of frag_004 to 2024-11-30 (carried 41 days)    

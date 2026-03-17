@@ -1,0 +1,24 @@
+{
+  "name": "@wash-sale/cli",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "wash-sale": "dist/main.js"
+  },
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@wash-sale/core": "workspace:*",
+    "@wash-sale/adapters": "workspace:*",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.17.2",
+    "@types/yargs": "^17.0.33",
+    "tsx": "^4.7.0",
+    "typescript": "^5.9.3"
+  }
+}

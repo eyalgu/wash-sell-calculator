@@ -1,0 +1,44 @@
+=================================================================================================================
+= DISCLAIMER: This tool is for educational and computational purposes only. It does not constitute tax, legal,  =
+= or financial advice. Wash sale rules (IRC §1091) have nuances including but not limited to: IRA acquisitions, =
+= options/contracts on substantially identical securities, spousal transactions, and state-specific rules.      =
+= Always consult a qualified tax professional for your specific situation.                                      =
+=================================================================================================================
+
+=== Input Transactions ===
+Date        Action  Source         Shares  Price/Share  Type      Acquired Date
+-------------------------------------------------------------------------------
+2025-07-31  BUY     Computershare  500     33.00        RSU_VEST  2025-07-31   
+2025-07-31  SELL    Computershare  500     30.00        IPO_SALE  2025-07-31   
+2025-08-01  BUY     Shareworks     200     115.00       RSU_VEST  2025-08-01   
+
+=== Summary ===
+Realized Gain/Loss (Short-term):  -900.00
+Realized Gain/Loss (Long-term):   0.00
+Total Disallowed Losses:          600.00
+Deferred (in remaining):           600.00
+Total Allowed Losses:             900.00
+
+=== Form 8949 (Short-term) ===
+Description  Acquired    Sold        Proceeds  Basis     Adj Code  Adj Amount  Gain/Loss  Term 
+-----------------------------------------------------------------------------------------------
+500 sh FIG   2025-07-31  2025-07-31  15000.00  16500.00  W         600.00      -900.00    SHORT
+
+=== Remaining Positions ===
+Fragment ID  Ticker  Source      Shares  Purchase Date  Adjusted Acq Date  Original Basis/Share  Adjusted Basis/Share
+---------------------------------------------------------------------------------------------------------------------
+frag_002     FIG     Shareworks  200     2025-08-01     2025-08-01         115.00                118.00              
+
+=== Audit Log ===
+#   Type                 Date        Message                                                                    
+----------------------------------------------------------------------------------------------------------------
+1   ROW_NORMALIZED       2025-07-31  Normalized row 2025-07-31_buy_0                                            
+2   ROW_NORMALIZED       2025-07-31  Normalized row 2025-07-31_sell_0                                           
+3   ROW_NORMALIZED       2025-08-01  Normalized row 2025-08-01_buy_0                                            
+4   LOT_CREATED          2025-07-31  Created lot frag_001 from 2025-07-31_buy_0                                 
+5   LOT_CREATED          2025-08-01  Created lot frag_002 from 2025-08-01_buy_0                                 
+6   SALE_PROCESSED       2025-07-31  Processed sale of 500 shares from frag_001                                 
+7   LOSS_DETECTED        2025-07-31  Loss of -1500 detected on sale 2025-07-31_sell_0 (500 shares from frag_001)
+8   REPLACEMENT_MATCHED  2025-07-31  Matched 200 replacement shares from frag_002 for loss on 2025-07-31_sell_0 
+9   BASIS_ADJUSTED       2025-08-01  Adjusted basis of frag_002 by +3/share → 118/share                         
+10  ACQ_DATE_ADJUSTED    2025-08-01  Adjusted acquisition date of frag_002 to 2025-08-01 (carried 0 days)       

@@ -1,0 +1,17 @@
+{
+  "name": "@wash-sale/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --serve"
+  },
+  "dependencies": {
+    "@wash-sale/core": "workspace:*",
+    "@wash-sale/adapters": "workspace:*"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "typescript": "^5.9.3"
+  }
+}

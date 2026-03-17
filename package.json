@@ -1,0 +1,20 @@
+{
+  "name": "wash-sale-calculator",
+  "private": true,
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
+    "typecheck": "tsc --build packages/core packages/adapters packages/test-kit packages/cli packages/web",
+    "lint": "eslint 'packages/*/src/**/*.ts' 'packages/*/test/**/*.ts'",
+    "clean": "rm -rf packages/*/dist packages/*/*.tsbuildinfo",
+    "deploy": "pnpm --filter @wash-sale/web build && mkdir -p docs && cp packages/web/dist/index.html packages/web/dist/bundle.js docs/"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.7.0",
+    "typescript": "^5.9.3"
+  }
+}

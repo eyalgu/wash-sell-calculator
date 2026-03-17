@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@wash-sale/core": ["packages/core/src"],
+      "@wash-sale/core/*": ["packages/core/src/*"],
+      "@wash-sale/adapters": ["packages/adapters/src"],
+      "@wash-sale/adapters/*": ["packages/adapters/src/*"],
+      "@wash-sale/test-kit": ["packages/test-kit/src"],
+      "@wash-sale/test-kit/*": ["packages/test-kit/src/*"]
+    },
+    "types": ["node"]
+  },
+  "include": ["packages/*/src/**/*.ts"]
+}
