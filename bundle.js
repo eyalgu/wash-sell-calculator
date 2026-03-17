@@ -2480,22 +2480,17 @@
         d.setUTCDate(d.getUTCDate() + days);
         return d.toISOString().slice(0, 10);
       }
-      function isSellToCoverSelfTrigger(lossPortion, fragment, normalizedRows) {
-        const saleRow = normalizedRows.find((r) => r.rowKey === lossPortion.saleRowKey);
-        if (!saleRow || saleRow.transactionType !== "SELL_TO_COVER")
+      function isSameOriginAsLossSale(lossPortion, candidateFragment, allFragments) {
+        const soldFragment = allFragments.find((f) => f.fragmentId === lossPortion.soldFromFragmentId);
+        if (!soldFragment)
           return false;
-        if (fragment.purchaseDateActual !== lossPortion.saleDate)
-          return false;
-        const buyRow = normalizedRows.find((r) => r.rowKey === fragment.originRowKey);
-        if (!buyRow)
-          return false;
-        return buyRow.date === saleRow.date && buyRow.source === saleRow.source && buyRow.action === "BUY";
+        return candidateFragment.originRowKey === soldFragment.originRowKey;
       }
       function getAvailableForReplacement(frag) {
         const available = frag.sharesOpen.minus(frag.consumedAsReplacement);
         return available.gt(0) ? available : decimal_1.ZERO;
       }
-      function allocateReplacements(lossPortions, fragments, ticker, normalizedRows, idGen, audit) {
+      function allocateReplacements(lossPortions, fragments, ticker, _normalizedRows, idGen, audit) {
         const matches = [];
         for (const lossPortion of lossPortions) {
           const windowStart = addDays(lossPortion.saleDate, -30);
@@ -2509,7 +2504,7 @@
               return false;
             if (getAvailableForReplacement(f).lte(0))
               return false;
-            if (isSellToCoverSelfTrigger(lossPortion, f, normalizedRows))
+            if (isSameOriginAsLossSale(lossPortion, f, fragments))
               return false;
             return true;
           }).sort((a, b) => {
